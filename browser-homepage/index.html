@@ -1,11 +1,9 @@
-<!-- browser index page -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mariowOS browser homepage</title>
+    <title>Stylish Home Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -34,6 +32,8 @@
             font-size: 20px;
             margin-bottom: 40px;
             color: rgba(255, 255, 255, 0.85);
+            text-align: center;
+            max-width: 80%;
         }
 
         @keyframes pulse {
@@ -57,7 +57,6 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.15);
             transition: box-shadow 0.3s;
             padding: 0 16px;
-            font-family: "Poppins", sans-serif;
         }
 
         .search-bar:focus-within {
@@ -68,7 +67,7 @@
             font-size: 24px;
             font-weight: 700;
             margin-right: 12px;
-            color: #000000; /* Google blue */
+            color: #000000;
         }
 
         .search-bar input[type="text"] {
@@ -78,12 +77,11 @@
             border: none;
             outline: none;
             border-radius: 36px;
-            font-family: "Poppins", sans-serif;
         }
 
         .search-bar input::placeholder {
             color: #888;
-            font-family: "Poppins", sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         .search-bar button {
@@ -98,9 +96,9 @@
     <div id="greeting">Hello!</div>
 
     <div class="search-container">
-        <form class="search-bar" action="https://www.google.com/search" method="get" target="_blank">
+        <form class="search-bar" action="https://www.google.com/search" method="get">
             <span class="google-g">G</span>
-            <input type="text" name="q" placeholder="Search with Google..." required>
+            <input type="text" name="q" placeholder="Search Google..." required>
             <button type="submit">Go</button>
         </form>
     </div>
@@ -117,19 +115,36 @@
         function updateGreeting() {
             const greeting = document.getElementById('greeting');
             const hour = new Date().getHours();
-            let text = '';
+            let options = [];
 
             if (hour >= 5 && hour < 12) {
-                text = "Good morning! Ready to start your day?";
+                options = [
+                    "Good morning! Ready to start your day?",
+                    "Morning sunshine! Let's get going!",
+                    "Rise and shine! Make today amazing."
+                ];
             } else if (hour >= 12 && hour < 17) {
-                text = "Good afternoon! Hope you're having a great day!";
+                options = [
+                    "Good afternoon! Keep going!",
+                    "Hope your afternoon is productive!",
+                    "Afternoon vibes! Stay focused."
+                ];
             } else if (hour >= 17 && hour < 21) {
-                text = "Good evening! Hope you had a great day!";
+                options = [
+                    "Good evening! Time to relax.",
+                    "Evening chill time! Breathe a bit.",
+                    "Relax, unwind, you've earned it."
+                ];
             } else {
-                text = "Good night! Sweet dreams!";
+                options = [
+                    "Good night! Don't forget to rest.",
+                    "Late night thinker? Take care!",
+                    "Nighty night! Sweet dreams ahead."
+                ];
             }
 
-            greeting.textContent = text;
+            // Pick a random greeting from the options
+            greeting.textContent = options[Math.floor(Math.random() * options.length)];
         }
 
         setInterval(updateClock, 1000);
