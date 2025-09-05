@@ -1,15 +1,18 @@
 # mariowOS Landpages
+![alt text](https://github.com/mariowstech/mariowOS-landpages/blob/main/repo.png "whatever makes you sleep at night")
 
-## ℹ important notice
+## important notice
 if you're running latest mariowOS everything here is integrated. beta testers may have issues with update page (it's for a good reason)
 
-⚠ **please do NOT use anything of this outside mariowOS. it's not needed to, trust me.** 
+⚠ **Please do NOT use anything of this outside mariowOS. it's not needed to, trust me.** 
 
-## what's this
+## what's this?
 repository used for the landing pages of mariowOS, such as updates, browser first page and more.
 
-## why make it public lol
-why not, every online source of mariowOS is opensource, website too (mariowstech.github.io/mariowOS)
+browse any directory to find whatever you want to find. please don't take anything from here, trust me x2. if you want tho give credit.
 
-## can i use browser landpage as my home tab on my browser
-yeah, tho if it's down don't point the finger at me for messing up your browsing experience
+## where can i download mariowOS??
+[here](https://mariowstech.github.io/mariowOS), see post install guide if you want to use any network-related service (browser and messaging).
+
+## i need a therapist after trying to use anything of this outside mariowOS!!!
+not my issue, i told you before 🤷‍♂️
