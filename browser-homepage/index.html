@@ -1,156 +1,249 @@
+<!-- fuckass browser, report any bugs in issues please -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #1e1e1e, #2c3e50);
-            font-family: 'Poppins', sans-serif;
-            overflow: hidden;
-            color: #fff;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stylish Home Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #1e1e1e, #2c3e50);
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+      color: #fff;
+    }
 
-        #clock {
-            font-size: 100px;
-            font-weight: 600;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            animation: pulse 2s infinite;
-            margin-bottom: 20px;
-        }
+    #clock {
+      font-size: 100px;
+      font-weight: 600;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      animation: pulse 2s infinite;
+      margin-bottom: 0px;
+    }
 
-        #greeting {
-            font-size: 20px;
-            margin-bottom: 40px;
-            color: rgba(255, 255, 255, 0.85);
-            text-align: center;
-            max-width: 80%;
-        }
+    #greeting {
+      font-size: 21px;
+      margin-bottom: 40px;
+      color: rgba(255, 255, 255, 0.85);
+      text-align: center;
+      max-width: 80%;
+    }
 
-        @keyframes pulse {
-            0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
-            50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.4); }
-        }
+    @keyframes pulse {
+      0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+      50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.4); }
+    }
 
-        .search-container {
-            width: 90%;
-            max-width: 800px;
-            display: flex;
-            justify-content: center;
-        }
+    .search-container {
+      width: 90%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
 
-        .search-bar {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            border-radius: 36px;
-            background-color: #fff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            transition: box-shadow 0.3s;
-            padding: 0 16px;
-        }
+    .search-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      border-radius: 36px;
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: box-shadow 0.3s;
+      padding: 0 16px;
+      position: relative;
+      z-index: 2;
+      font-family: 'Poppins';
+    }
 
-        .search-bar:focus-within {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-        }
+    .search-bar:focus-within {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
 
-        .search-bar .google-g {
-            font-size: 24px;
-            font-weight: 700;
-            margin-right: 12px;
-            color: #000000;
-        }
+    .search-bar input[type="text"] {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 18px;
+      border: none;
+      outline: none;
+      border-radius: 36px;
+      font-family: 'Poppins';
+    }
 
-        .search-bar input[type="text"] {
-            flex: 1;
-            padding: 12px 16px;
-            font-size: 18px;
-            border: none;
-            outline: none;
-            border-radius: 36px;
-        }
+    .search-bar input::placeholder {
+      color: #888;
+      font-family: 'Poppins';
+    }
 
-        .search-bar input::placeholder {
-            color: #888;
-            font-family: 'Poppins', sans-serif;
-        }
+    /* Suggestions dropdown */
+    #suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-radius: 12px;
+      margin-top: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      overflow: hidden;
+      z-index: 1;
+    }
 
-        .search-bar button {
-            display: none;
-        }
+    #suggestions div {
+      padding: 12px 16px;
+      font-size: 16px;
+      color: #333;
+      cursor: pointer;
+    }
 
-    </style>
+    #suggestions div:hover,
+    #suggestions .highlighted {
+      background: #f0f0f0;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
 
-    <div id="clock">00:00</div>
-    <div id="greeting">Hello!</div>
+  <div id="clock">00:00</div>
+  <div id="greeting">Hello!</div>
 
-    <div class="search-container">
-        <form class="search-bar" action="https://www.google.com/search" method="get">
-            <span class="google-g">G</span>
-            <input type="text" name="q" placeholder="Search Google..." required>
-            <button type="submit">Go</button>
-        </form>
-    </div>
+  <div class="search-container">
+    <form id="searchForm" class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search or enter a URL..." autocomplete="off" required>
+      <button type="submit" hidden>Go</button>
+    </form>
+    <div id="suggestions" class="hidden"></div>
+  </div>
 
-    <script>
-        function updateClock() {
-            const clock = document.getElementById('clock');
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            clock.textContent = `${hours}:${minutes}`;
+  <script>
+    function updateClock() {
+      const clock = document.getElementById('clock');
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      clock.textContent = `${hours}:${minutes}`;
+    }
+
+    function updateGreeting() {
+      const greeting = document.getElementById('greeting');
+      const hour = new Date().getHours();
+      let options = [];
+
+      if (hour >= 5 && hour < 12) {
+        options = ["Good morning!", "Morning sunshine!", "Rise and shine!"];
+      } else if (hour >= 12 && hour < 17) {
+        options = ["Good afternoon!", "Keep going strong!", "Hope your day’s great!"];
+      } else if (hour >= 17 && hour < 21) {
+        options = ["Good evening!", "Relax and unwind.", "Evening vibes 🌆"];
+      } else {
+        options = ["Good night!", "Sweet dreams!", "Rest well 🌙"];
+      }
+
+      greeting.textContent = options[Math.floor(Math.random() * options.length)];
+    }
+
+    const form = document.getElementById('searchForm');
+    const input = document.getElementById('searchInput');
+    const suggestionsBox = document.getElementById('suggestions');
+    let currentIndex = -1;
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const query = input.value.trim();
+      if (!query) return;
+
+      if (query.match(/^https?:\/\//i)) {
+        window.location.href = query;
+      } else if (query.match(/^[\w.-]+\.[a-z]{2,}$/i)) {
+        window.location.href = "https://" + query;
+      } else {
+        window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
+      }
+    });
+
+    input.addEventListener('input', async () => {
+      const query = input.value.trim();
+      currentIndex = -1;
+      if (!query) {
+        suggestionsBox.classList.add('hidden');
+        return;
+      }
+
+      try {
+        const res = await fetch(`https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        const suggestions = data[1];
+
+        if (suggestions.length > 0) {
+          suggestionsBox.innerHTML = '';
+          suggestions.forEach(s => {
+            const div = document.createElement('div');
+            div.textContent = s;
+            div.addEventListener('click', () => {
+              input.value = s;
+              form.requestSubmit();
+            });
+            suggestionsBox.appendChild(div);
+          });
+          suggestionsBox.classList.remove('hidden');
+        } else {
+          suggestionsBox.classList.add('hidden');
         }
+      } catch (err) {
+        suggestionsBox.classList.add('hidden');
+      }
+    });
 
-        function updateGreeting() {
-            const greeting = document.getElementById('greeting');
-            const hour = new Date().getHours();
-            let options = [];
+    input.addEventListener('keydown', (e) => {
+      const items = suggestionsBox.querySelectorAll('div');
+      if (suggestionsBox.classList.contains('hidden') || items.length === 0) return;
 
-            if (hour >= 5 && hour < 12) {
-                options = [
-                    "Good morning! Ready to start your day?",
-                    "Morning sunshine! Let's get going!",
-                    "Rise and shine! Make today amazing."
-                ];
-            } else if (hour >= 12 && hour < 17) {
-                options = [
-                    "Good afternoon! Keep going!",
-                    "Hope your afternoon is productive!",
-                    "Afternoon vibes! Stay focused."
-                ];
-            } else if (hour >= 17 && hour < 21) {
-                options = [
-                    "Good evening! Time to relax.",
-                    "Evening chill time! Breathe a bit.",
-                    "Relax, unwind, you've earned it."
-                ];
-            } else {
-                options = [
-                    "Good night! Don't forget to rest.",
-                    "Late night thinker? Take care!",
-                    "Nighty night! Sweet dreams ahead."
-                ];
-            }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentIndex = (currentIndex + 1) % items.length;
+        updateHighlight(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentIndex = (currentIndex - 1 + items.length) % items.length;
+        updateHighlight(items);
+      } else if (e.key === 'Enter' && currentIndex >= 0) {
+        e.preventDefault();
+        items[currentIndex].click();
+      }
+    });
 
-            // Pick a random greeting from the options
-            greeting.textContent = options[Math.floor(Math.random() * options.length)];
-        }
+    function updateHighlight(items) {
+      items.forEach((item, idx) => {
+        item.classList.toggle('highlighted', idx === currentIndex);
+      });
+    }
 
-        setInterval(updateClock, 1000);
-        setInterval(updateGreeting, 60000); // Update greeting every minute
-        updateClock();
-        updateGreeting();
-    </script>
+    document.addEventListener('click', (e) => {
+      if (!form.contains(e.target)) {
+        suggestionsBox.classList.add('hidden');
+        currentIndex = -1;
+      }
+    });
+
+    setInterval(updateClock, 1000);
+    setInterval(updateGreeting, 60000);
+    updateClock();
+    updateGreeting();
+  </script>
 
 </body>
 </html>
