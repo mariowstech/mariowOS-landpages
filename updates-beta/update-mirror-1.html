@@ -4,7 +4,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mariowOS Update Status</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -55,6 +54,16 @@
       color: #fff;
       text-decoration: underline;
     }
+      .download-btn {
+    display: inline-block;
+    padding: 8px 12px;
+    background: #3ec6e0;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-family: "Poppins";
+  }
+  .download-btn:hover { background: #257585; }
   </style>
 </head>
 <body>
@@ -62,7 +71,12 @@
     <div class="logo">
       <img src="logo.png" alt="mariowOS logo" class="logo-img">
     </div>
-    <div class="status">No new updates found</div>
+   <div id="updates-container">
+  <a id="download-updates" href="https://github.com/mariowOS/development/raw/refs/heads/main/prebuilt/prerelease-candidate.zip" class="download-btn">Download update</a>
+  <div style="margin-top:10px">
+    <iframe id="updates-iframe" src="changelog.txt" style="width:100%;height:240px;border:1px solid #ddd;" title="updates text file"></iframe>
+     </div>
+    </div>
     <div class="links">
       <a href="changechannel.html">Change channel</a>
       <a href="roadmap.html">Update roadmap</a>
