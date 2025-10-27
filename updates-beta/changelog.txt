@@ -1,0 +1,7 @@
+#1 candidate for Pre-release 1
+This will NOT be shown on the roadmap since it's a preview of a preview
+
+- added terminal
+- fixed bugs
+- implemented too much stuff i forgot what it was about
+- check feedback app pls
