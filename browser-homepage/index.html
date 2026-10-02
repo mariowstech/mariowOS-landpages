@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en" class="h-full w-full overflow-hidden">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>New Tab</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,12 +39,33 @@
         }
     </script>
     <style>
+        :root {
+            --clock-size: clamp(3.5rem, 11vh + 3vw, 8.5rem);
+            --greeting-size: clamp(1rem, 2.5vh + 0.8vw, 2.2rem);
+            --quote-size: clamp(0.75rem, 1.3vh + 0.3vw, 1.05rem);
+            --padding-dynamic: clamp(1rem, 3vh + 1.5vw, 2.5rem);
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
+            touch-action: manipulation;
+        }
+
+        .fluid-clock {
+            font-size: var(--clock-size);
+            line-height: 0.95;
+        }
+
+        .fluid-greeting {
+            font-size: var(--greeting-size);
+        }
+
+        .fluid-quote {
+            font-size: var(--quote-size);
         }
 
         .material-symbols-outlined {
-            font-size: 22px;
+            font-size: clamp(18px, 2.2vh, 26px);
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
             display: inline-block;
             vertical-align: middle;
@@ -52,53 +73,53 @@
         }
 
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         ::-webkit-scrollbar-track {
             background: rgba(0, 0, 0, 0.1);
         }
         ::-webkit-scrollbar-thumb {
             background: rgba(255, 255, 255, 0.25);
-            border-radius: 3px;
+            border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.4);
         }
 
         .glass-panel {
-            background: rgba(18, 18, 24, 0.45);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            background: rgba(18, 18, 24, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
         }
 
         .glass-card {
             background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .glass-card:hover {
             background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(255, 255, 255, 0.28);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
         }
 
         .glass-input {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.35);
             backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             color: white;
         }
 
         .glass-input:focus {
-            background: rgba(0, 0, 0, 0.5);
-            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.55);
+            border-color: rgba(255, 255, 255, 0.45);
             outline: none;
         }
 
@@ -110,11 +131,21 @@
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
         }
         .text-shadow-lg {
-            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.65), 0 2px 6px rgba(0, 0, 0, 0.4);
         }
 
         .drawer-slide {
             transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Landscape auto-adapting layout optimization */
+        @media (max-height: 650px) {
+            .compact-hide {
+                display: none !important;
+            }
+            .space-dynamic {
+                gap: 0.5rem !important;
+            }
         }
     </style>
 </head>
@@ -123,68 +154,71 @@
     <div id="bg-layer" class="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105"></div>
     <div id="bg-overlay" class="absolute inset-0 bg-black transition-opacity duration-300" style="opacity: 0.25;"></div>
 
-    <div class="relative z-10 flex flex-col justify-between h-full p-6 md:p-10 max-w-7xl mx-auto overflow-y-auto">
+    <!-- Main Viewport Container -->
+    <div class="relative z-10 flex flex-col justify-between h-full w-full overflow-y-auto overflow-x-hidden" style="padding: var(--padding-dynamic);">
 
         <!-- Header Widgets -->
-        <header class="flex justify-between items-start w-full">
-            <div id="widget-weather" class="glass-card rounded-2xl p-4 flex items-center space-x-3 text-shadow-md transition-all">
+        <header class="flex justify-between items-center w-full max-w-7xl mx-auto shrink-0 z-10">
+            <div id="widget-weather" class="glass-card rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 flex items-center space-x-3 text-shadow-md transition-all">
                 <div id="weather-icon-container">
-                    <i data-lucide="cloud-sun" class="w-8 h-8 text-yellow-300"></i>
+                    <i data-lucide="cloud-sun" class="w-6 h-6 sm:w-7 sm:h-7 text-yellow-300"></i>
                 </div>
                 <div>
                     <div class="flex items-center space-x-2">
-                        <span id="weather-temp" class="text-xl font-semibold tracking-tight">--°C</span>
-                        <span id="weather-city" class="text-xs font-medium uppercase tracking-wider text-slate-300 opacity-90">Loading...</span>
+                        <span id="weather-temp" class="text-base sm:text-lg font-semibold tracking-tight">--°C</span>
+                        <span id="weather-city" class="text-[10px] sm:text-xs font-medium uppercase tracking-wider text-slate-300 opacity-90 truncate max-w-[100px] sm:max-w-[150px]">Loading...</span>
                     </div>
-                    <div id="weather-desc" class="text-xs text-slate-300 capitalize">Fetching forecast</div>
+                    <div id="weather-desc" class="text-[10px] sm:text-xs text-slate-300 capitalize truncate max-w-[120px] sm:max-w-[160px]">Fetching forecast</div>
                 </div>
             </div>
 
-            <div class="flex items-center space-x-3">
-                <button id="btn-todo" title="To-Do List" class="glass-card p-3 rounded-full hover:bg-white/20 transition text-white">
-                    <i data-lucide="check-square" class="w-5 h-5"></i>
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button id="btn-todo" title="To-Do List" class="glass-card p-2.5 sm:p-3 rounded-full hover:bg-white/20 transition text-white">
+                    <i data-lucide="check-square" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </button>
-                <button id="btn-refresh-bg" title="New Background Photo" class="glass-card p-3 rounded-full hover:bg-white/20 transition text-white">
-                    <i data-lucide="image" class="w-5 h-5"></i>
+                <button id="btn-refresh-bg" title="New Background Photo" class="glass-card p-2.5 sm:p-3 rounded-full hover:bg-white/20 transition text-white">
+                    <i data-lucide="image" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </button>
-                <button id="btn-settings" title="Settings" class="glass-card p-3 rounded-full hover:bg-white/20 transition text-white">
-                    <i data-lucide="settings" class="w-5 h-5"></i>
+                <button id="btn-settings" title="Settings" class="glass-card p-2.5 sm:p-3 rounded-full hover:bg-white/20 transition text-white">
+                    <i data-lucide="settings" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                 </button>
             </div>
         </header>
 
-        <main class="flex flex-col items-center justify-center my-auto py-6 text-center space-y-6 max-w-3xl mx-auto w-full">
+        <!-- Center Content Stage -->
+        <main class="flex flex-col items-center justify-center my-auto py-2 text-center space-dynamic space-y-3 sm:space-y-4 md:space-y-5 max-w-4xl mx-auto w-full">
             
+            <!-- Clock Widget -->
             <div id="widget-clock" class="space-y-1">
-                <h1 id="clock-display" class="text-6xl sm:text-8xl md:text-9xl font-bold tracking-tight text-shadow-lg font-poppins">
+                <h1 id="clock-display" class="fluid-clock font-bold tracking-tight text-shadow-lg font-poppins">
                     00:00
                 </h1>
-                <h2 id="greeting-display" class="text-xl sm:text-3xl font-medium text-shadow-md text-slate-100 opacity-90">
+                <h2 id="greeting-display" class="fluid-greeting font-medium text-shadow-md text-slate-100 opacity-90">
                     Good day
                 </h2>
-                <div id="date-display" class="text-xs sm:text-sm text-slate-300 font-light tracking-widest uppercase text-shadow-md pt-1">
+                <div id="date-display" class="text-[10px] sm:text-xs md:text-sm text-slate-300 font-light tracking-widest uppercase text-shadow-md pt-0.5">
                     Monday, January 1
                 </div>
             </div>
 
             <!-- Quote Widget under Clock -->
-            <div id="widget-quote" class="w-full max-w-lg glass-card rounded-2xl p-4 sm:p-5 relative group transition hover:border-white/30 my-2">
-                <p id="quote-text" class="text-xs sm:text-sm font-poppins font-normal text-slate-100 text-shadow-md">
+            <div id="widget-quote" class="w-full max-w-md md:max-w-xl glass-card rounded-2xl p-3 sm:p-4 relative group transition hover:border-white/30 my-1">
+                <p id="quote-text" class="fluid-quote font-poppins font-normal text-slate-100 text-shadow-md leading-relaxed px-2">
                     "Simplicity is the ultimate sophistication."
                 </p>
-                <p id="quote-author" class="text-[11px] font-poppins text-slate-300 mt-1.5 tracking-wide text-shadow-md">
+                <p id="quote-author" class="text-[10px] sm:text-xs font-poppins text-slate-300 mt-1 tracking-wide text-shadow-md">
                     — Leonardo da Vinci
                 </p>
-                <button id="btn-next-quote" title="Get new quote" class="absolute right-3 bottom-3 opacity-0 group-hover:opacity-100 transition p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+                <button id="btn-next-quote" title="Get new quote" class="absolute right-2.5 bottom-2.5 opacity-0 group-hover:opacity-100 transition p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white">
                     <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
                 </button>
             </div>
 
             <!-- Search Bar Widget with Google Logo -->
-            <div id="widget-search" class="w-full max-w-xl">
+            <div id="widget-search" class="w-full max-w-md sm:max-w-lg md:max-w-xl">
                 <form id="search-form" class="relative flex items-center">
-                    <div class="absolute left-4 flex items-center justify-center pointer-events-none">
-                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <div class="absolute left-3.5 sm:left-4 flex items-center justify-center pointer-events-none">
+                        <svg class="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
                             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
@@ -192,27 +226,29 @@
                         </svg>
                     </div>
                     <input type="text" id="search-input" placeholder="Search the web or enter URL..." 
-                           class="w-full pl-12 pr-12 py-3.5 rounded-2xl glass-input text-base sm:text-lg placeholder-slate-400 focus:ring-2 focus:ring-white/40 transition shadow-lg">
-                    <button type="submit" class="absolute right-3 p-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">
-                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                           class="w-full pl-10 sm:pl-12 pr-10 sm:pr-12 py-2.5 sm:py-3.5 rounded-2xl glass-input text-xs sm:text-base placeholder-slate-400 focus:ring-2 focus:ring-white/40 transition shadow-lg">
+                    <button type="submit" class="absolute right-2.5 sm:right-3 p-1 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">
+                        <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                     </button>
                 </form>
             </div>
 
-            <!-- Quick Links -->
-            <div id="widget-links" class="w-full pt-2">
-                <div id="links-container" class="flex flex-wrap justify-center gap-3.5 max-w-2xl mx-auto"></div>
+            <!-- Quick Links / Speed Dial -->
+            <div id="widget-links" class="w-full pt-1">
+                <div id="links-container" class="flex flex-wrap justify-center gap-2 sm:gap-3 max-w-2xl mx-auto"></div>
             </div>
         </main>
+
+        <footer class="w-full shrink-0 h-2"></footer>
     </div>
 
     <!-- TO-DO LIST SLIDE PANEL -->
-    <div id="panel-todo" class="fixed top-0 right-0 h-full w-full sm:w-96 glass-panel z-30 drawer-slide transform translate-x-full flex flex-col justify-between p-6 shadow-2xl">
+    <div id="panel-todo" class="fixed top-0 right-0 h-full w-full max-w-sm glass-panel z-30 drawer-slide transform translate-x-full flex flex-col justify-between p-5 sm:p-6 shadow-2xl">
         <div>
-            <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
+            <div class="flex justify-between items-center mb-5 pb-3 border-b border-white/10">
                 <div class="flex items-center space-x-2">
                     <i data-lucide="check-square" class="w-5 h-5 text-indigo-400"></i>
-                    <h3 class="text-lg font-semibold text-white">Tasks & Notes</h3>
+                    <h3 class="text-base sm:text-lg font-semibold text-white">Tasks & Notes</h3>
                 </div>
                 <button id="close-todo" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -221,51 +257,51 @@
 
             <form id="todo-form" class="flex space-x-2 mb-4">
                 <input type="text" id="todo-input" placeholder="Add a new task..." 
-                       class="flex-1 glass-input px-3 py-2 rounded-xl text-sm placeholder-slate-400 focus:ring-1 focus:ring-white/40">
-                <button type="submit" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-medium text-sm transition flex items-center justify-center">
+                       class="flex-1 glass-input px-3 py-2 rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:ring-1 focus:ring-white/40">
+                <button type="submit" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-medium text-xs sm:text-sm transition flex items-center justify-center">
                     <i data-lucide="plus" class="w-4 h-4"></i>
                 </button>
             </form>
 
-            <ul id="todo-list" class="space-y-2 max-h-[60vh] overflow-y-auto pr-1"></ul>
+            <ul id="todo-list" class="space-y-2 max-h-[65vh] overflow-y-auto pr-1"></ul>
         </div>
 
-        <div class="text-xs text-slate-400 text-center pt-4 border-t border-white/10">
+        <div class="text-[11px] text-slate-400 text-center pt-3 border-t border-white/10">
             Click tasks to mark completed.
         </div>
     </div>
 
     <!-- SETTINGS SIDEBAR DRAWER -->
-    <div id="panel-settings" class="fixed top-0 right-0 h-full w-full sm:w-96 glass-panel z-40 drawer-slide transform translate-x-full flex flex-col p-6 shadow-2xl overflow-y-auto">
-        <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
+    <div id="panel-settings" class="fixed top-0 right-0 h-full w-full max-w-sm glass-panel z-40 drawer-slide transform translate-x-full flex flex-col p-5 sm:p-6 shadow-2xl overflow-y-auto">
+        <div class="flex justify-between items-center mb-5 pb-3 border-b border-white/10">
             <div class="flex items-center space-x-2">
                 <i data-lucide="sliders" class="w-5 h-5 text-indigo-400"></i>
-                <h3 class="text-lg font-semibold text-white">Customize Homepage</h3>
+                <h3 class="text-base sm:text-lg font-semibold text-white">Customize Homepage</h3>
             </div>
             <button id="close-settings" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
         </div>
 
-        <div class="space-y-6 flex-1 text-sm">
+        <div class="space-y-5 flex-1 text-xs sm:text-sm">
             
-            <div class="space-y-2">
-                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Your Name</label>
+            <div class="space-y-1.5">
+                <label class="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Your Name</label>
                 <input type="text" id="setting-user-name" placeholder="Enter name" 
-                       class="w-full glass-input px-3 py-2 rounded-xl text-sm">
+                       class="w-full glass-input px-3 py-2 rounded-xl text-xs sm:text-sm">
             </div>
 
-            <div class="space-y-2 pt-2 border-t border-white/10">
-                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Weather Location</label>
+            <div class="space-y-1.5 pt-2 border-t border-white/10">
+                <label class="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Weather Location</label>
                 <input type="text" id="setting-weather-location" placeholder="e.g. London or Auto-detect" 
-                       class="w-full glass-input px-3 py-2 rounded-xl text-sm">
-                <p class="text-[11px] text-slate-400">Leave blank to use automatic location detection.</p>
+                       class="w-full glass-input px-3 py-2 rounded-xl text-xs sm:text-sm">
+                <p class="text-[10px] text-slate-400">Leave blank to use automatic location detection.</p>
             </div>
 
             <!-- Background Source Selection (API-Keyless Options) -->
-            <div class="space-y-3 pt-2 border-t border-white/10">
-                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Background Source</label>
-                <select id="setting-bg-mode" class="w-full glass-input px-3 py-2 rounded-xl text-sm bg-slate-900/80">
+            <div class="space-y-2.5 pt-2 border-t border-white/10">
+                <label class="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Background Source</label>
+                <select id="setting-bg-mode" class="w-full glass-input px-3 py-2 rounded-xl text-xs sm:text-sm bg-slate-900/90">
                     <option value="picsum">Picsum Photos (Keyless HD)</option>
                     <option value="curated">Curated Nature (Direct HD)</option>
                     <option value="gradient">Gradient Presets</option>
@@ -273,15 +309,15 @@
                     <option value="custom">Custom Image URL</option>
                 </select>
 
-                <div id="bg-opt-custom" class="space-y-2 hidden">
-                    <label class="block text-xs text-slate-400">Image URL</label>
+                <div id="bg-opt-custom" class="space-y-1.5 hidden">
+                    <label class="block text-[11px] text-slate-400">Image URL</label>
                     <input type="text" id="setting-bg-url" placeholder="https://images.unsplash.com/photo-..." 
-                           class="w-full glass-input px-3 py-2 rounded-xl text-sm">
+                           class="w-full glass-input px-3 py-2 rounded-xl text-xs sm:text-sm">
                 </div>
 
-                <div id="bg-opt-gradient" class="space-y-2 hidden">
-                    <label class="block text-xs text-slate-400">Select Gradient</label>
-                    <select id="setting-bg-gradient" class="w-full glass-input px-3 py-2 rounded-xl text-sm bg-slate-900/80">
+                <div id="bg-opt-gradient" class="space-y-1.5 hidden">
+                    <label class="block text-[11px] text-slate-400">Select Gradient</label>
+                    <select id="setting-bg-gradient" class="w-full glass-input px-3 py-2 rounded-xl text-xs sm:text-sm bg-slate-900/90">
                         <option value="linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)">Deep Midnight</option>
                         <option value="linear-gradient(135deg, #181825 0%, #313244 100%)">Catppuccin Mocha</option>
                         <option value="linear-gradient(135deg, #2e1065 0%, #701a75 100%)">Neon Dusk</option>
@@ -290,21 +326,21 @@
                     </select>
                 </div>
 
-                <div id="bg-opt-solid" class="space-y-2 hidden">
-                    <label class="block text-xs text-slate-400">Select Color</label>
-                    <input type="color" id="setting-bg-color" value="#0f172a" class="w-full h-10 rounded-xl cursor-pointer bg-transparent border border-white/20">
+                <div id="bg-opt-solid" class="space-y-1.5 hidden">
+                    <label class="block text-[11px] text-slate-400">Select Color</label>
+                    <input type="color" id="setting-bg-color" value="#0f172a" class="w-full h-9 rounded-xl cursor-pointer bg-transparent border border-white/20">
                 </div>
 
-                <div class="space-y-3 pt-2">
+                <div class="space-y-2.5 pt-1">
                     <div>
-                        <div class="flex justify-between text-xs text-slate-300 mb-1">
+                        <div class="flex justify-between text-[11px] text-slate-300 mb-1">
                             <span>Background Blur</span>
                             <span id="val-blur">0px</span>
                         </div>
                         <input type="range" id="setting-bg-blur" min="0" max="20" value="0" class="w-full accent-indigo-400">
                     </div>
                     <div>
-                        <div class="flex justify-between text-xs text-slate-300 mb-1">
+                        <div class="flex justify-between text-[11px] text-slate-300 mb-1">
                             <span>Dark Overlay Opacity</span>
                             <span id="val-overlay">25%</span>
                         </div>
@@ -313,9 +349,9 @@
                 </div>
             </div>
 
-            <div class="space-y-2 pt-2 border-t border-white/10">
-                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Search Engine</label>
-                <select id="setting-search-engine" class="w-full glass-input px-3 py-2 rounded-xl text-sm bg-slate-900/80">
+            <div class="space-y-1.5 pt-2 border-t border-white/10">
+                <label class="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Search Engine</label>
+                <select id="setting-search-engine" class="w-full glass-input px-3 py-2 rounded-xl text-xs sm:text-sm bg-slate-900/90">
                     <option value="google">Google</option>
                     <option value="duckduckgo">DuckDuckGo</option>
                     <option value="bing">Bing</option>
@@ -323,15 +359,15 @@
                 </select>
             </div>
 
-            <div class="space-y-3 pt-2 border-t border-white/10">
-                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Clock Style</label>
+            <div class="space-y-2.5 pt-2 border-t border-white/10">
+                <label class="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Clock Style</label>
                 <div class="flex items-center justify-between">
                     <span class="text-xs text-slate-300">24-Hour Time Format</span>
                     <input type="checkbox" id="setting-clock-24h" class="w-4 h-4 rounded accent-indigo-500">
                 </div>
                 <div>
-                    <label class="block text-xs text-slate-400 mb-1">Clock Font Family</label>
-                    <select id="setting-clock-font" class="w-full glass-input px-3 py-2 rounded-xl text-sm bg-slate-900/80">
+                    <label class="block text-[11px] text-slate-400 mb-1">Clock Font Family</label>
+                    <select id="setting-clock-font" class="w-full glass-input px-3 py-2 rounded-xl text-xs sm:text-sm bg-slate-900/90">
                         <option value="font-poppins">Poppins (Default Clean)</option>
                         <option value="font-serif">Playfair (Serif Elegance)</option>
                         <option value="font-mono">JetBrains Mono (Code)</option>
@@ -339,9 +375,9 @@
                 </div>
             </div>
 
-            <div class="space-y-2 pt-2 border-t border-white/10">
-                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Visible Widgets</label>
-                <div class="space-y-2">
+            <div class="space-y-1.5 pt-2 border-t border-white/10">
+                <label class="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">Visible Widgets</label>
+                <div class="space-y-1.5">
                     <label class="flex items-center justify-between text-xs text-slate-300">
                         <span>Clock & Greeting</span>
                         <input type="checkbox" id="toggle-widget-clock" checked class="w-4 h-4 rounded accent-indigo-500">
@@ -366,18 +402,18 @@
             </div>
 
             <div class="pt-2 border-t border-white/10">
-                <button id="btn-manage-links" class="w-full py-2.5 px-4 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-medium text-white transition flex items-center justify-center space-x-2">
-                    <i data-lucide="link" class="w-4 h-4"></i>
+                <button id="btn-manage-links" class="w-full py-2 px-3 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-medium text-white transition flex items-center justify-center space-x-2">
+                    <i data-lucide="link" class="w-3.5 h-3.5"></i>
                     <span>Manage Speed Dial Shortcuts</span>
                 </button>
             </div>
 
             <div class="pt-2 border-t border-white/10 flex space-x-2">
-                <button id="btn-export-settings" class="flex-1 py-2 px-3 bg-white/5 hover:bg-white/10 rounded-xl text-xs text-slate-300 hover:text-white transition">
-                    Export Settings
+                <button id="btn-export-settings" class="flex-1 py-1.5 px-2 bg-white/5 hover:bg-white/10 rounded-xl text-[11px] text-slate-300 hover:text-white transition">
+                    Export JSON
                 </button>
-                <button id="btn-import-settings" class="flex-1 py-2 px-3 bg-white/5 hover:bg-white/10 rounded-xl text-xs text-slate-300 hover:text-white transition">
-                    Import Settings
+                <button id="btn-import-settings" class="flex-1 py-1.5 px-2 bg-white/5 hover:bg-white/10 rounded-xl text-[11px] text-slate-300 hover:text-white transition">
+                    Import JSON
                 </button>
                 <input type="file" id="import-file-input" class="hidden" accept=".json">
             </div>
@@ -385,48 +421,48 @@
     </div>
 
     <!-- MANAGE QUICK LINKS MODAL -->
-    <div id="modal-links" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 p-4">
-        <div class="glass-panel w-full max-w-md rounded-2xl p-6 space-y-4 shadow-2xl border border-white/20 max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center pb-3 border-b border-white/10">
-                <h3 class="text-lg font-semibold text-white">Speed Dial Shortcuts</h3>
+    <div id="modal-links" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+        <div class="glass-panel w-full max-w-md rounded-2xl p-5 sm:p-6 space-y-3.5 shadow-2xl border border-white/20 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center pb-2.5 border-b border-white/10">
+                <h3 class="text-base sm:text-lg font-semibold text-white">Speed Dial Shortcuts</h3>
                 <button id="close-links-modal" class="p-1 rounded-lg text-slate-300 hover:text-white hover:bg-white/10">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <form id="add-link-form" class="space-y-3">
+            <form id="add-link-form" class="space-y-2.5">
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">Shortcut Title</label>
-                    <input type="text" id="new-link-title" placeholder="e.g. GitHub" required class="w-full glass-input px-3 py-2 rounded-xl text-sm">
+                    <input type="text" id="new-link-title" placeholder="e.g. GitHub" required class="w-full glass-input px-3 py-1.5 rounded-xl text-xs sm:text-sm">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">URL</label>
-                    <input type="url" id="new-link-url" placeholder="https://github.com" required class="w-full glass-input px-3 py-2 rounded-xl text-sm">
+                    <input type="url" id="new-link-url" placeholder="https://github.com" required class="w-full glass-input px-3 py-1.5 rounded-xl text-xs sm:text-sm">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-300 mb-1">Material Icon Name</label>
                     <div class="flex space-x-2">
-                        <input type="text" id="new-link-icon" placeholder="e.g. code, language, play_arrow" required class="flex-1 glass-input px-3 py-2 rounded-xl text-sm">
-                        <div id="icon-preview" class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white">
+                        <input type="text" id="new-link-icon" placeholder="e.g. code, language, play_arrow" required class="flex-1 glass-input px-3 py-1.5 rounded-xl text-xs sm:text-sm">
+                        <div id="icon-preview" class="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white">
                             <span class="material-symbols-outlined">language</span>
                         </div>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-[11px] text-slate-400 mb-1.5">Preset Material Icons</label>
-                    <div id="icon-presets" class="flex flex-wrap gap-1.5"></div>
+                    <label class="block text-[10px] text-slate-400 mb-1">Preset Material Icons</label>
+                    <div id="icon-presets" class="flex flex-wrap gap-1"></div>
                 </div>
 
-                <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition flex items-center justify-center space-x-2 pt-2">
+                <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-medium transition flex items-center justify-center space-x-1.5 pt-1.5">
                     <i data-lucide="plus" class="w-4 h-4"></i>
                     <span>Add Shortcut</span>
                 </button>
             </form>
 
             <div class="pt-2 border-t border-white/10">
-                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Existing Shortcuts</label>
-                <div id="quick-links-editor-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+                <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Existing Shortcuts</label>
+                <div id="quick-links-editor-list" class="space-y-1.5 max-h-40 overflow-y-auto pr-1"></div>
             </div>
         </div>
     </div>
@@ -455,7 +491,7 @@
                 'spotify.com': 'headset'
             };
 
-            // Keyless Curated High-Res Direct Images (Reliable Unsplash CDN URLs)
+            // Keyless Curated High-Res Direct HD Landscape Wallpapers
             const curatedWallpapers = [
                 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80',
                 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=1920&q=80',
@@ -471,7 +507,7 @@
                 clock24h: false,
                 clockFont: 'font-poppins',
                 searchEngine: 'google',
-                bgMode: 'picsum', // Default to reliable Picsum
+                bgMode: 'picsum',
                 bgUrl: '',
                 bgGradient: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)',
                 bgColor: '#0f172a',
@@ -512,7 +548,7 @@
             };
 
             let config = JSON.parse(localStorage.getItem('tabliss_config')) || defaultConfig;
-            if (config.bgMode === 'unsplash') config.bgMode = 'picsum'; // Migrate deprecated setting
+            if (config.bgMode === 'unsplash') config.bgMode = 'picsum';
             config = { ...defaultConfig, ...config, visibleWidgets: { ...defaultConfig.visibleWidgets, ...config.visibleWidgets } };
 
             function saveConfig() {
@@ -536,7 +572,7 @@
                 const clockEl = document.getElementById('clock-display');
                 if (clockEl) {
                     clockEl.textContent = `${formattedHours}:${minutes}`;
-                    clockEl.className = `${config.clockFont} text-6xl sm:text-8xl md:text-9xl font-bold tracking-tight text-shadow-lg`;
+                    clockEl.className = `${config.clockFont} fluid-clock font-bold tracking-tight text-shadow-lg`;
                 }
 
                 const curHour = now.getHours();
@@ -640,12 +676,13 @@
                 bgOverlay.style.opacity = (config.bgOverlay / 100).toString();
 
                 if (config.bgMode === 'picsum') {
-                    // Uses keyless Picsum random photos with cache busting seed
                     const seed = Math.floor(Math.random() * 10000);
-                    bgLayer.style.backgroundImage = `url('https://picsum.photos/seed/${seed}/1920/1080')`;
+                    // Responsive dimensions request landscape proportion base
+                    const width = Math.max(window.innerWidth, 1920);
+                    const height = Math.max(window.innerHeight, 1080);
+                    bgLayer.style.backgroundImage = `url('https://picsum.photos/seed/${seed}/${width}/${height}')`;
                     bgLayer.style.backgroundColor = '';
                 } else if (config.bgMode === 'curated') {
-                    // Pick a direct high-res photo from array
                     const randomIndex = Math.floor(Math.random() * curatedWallpapers.length);
                     bgLayer.style.backgroundImage = `url('${curatedWallpapers[randomIndex]}')`;
                     bgLayer.style.backgroundColor = '';
@@ -675,29 +712,29 @@
                     const linkTile = document.createElement('a');
                     linkTile.href = link.url;
                     linkTile.target = '_self';
-                    linkTile.className = 'glass-card px-4 py-3 rounded-2xl flex items-center space-x-2.5 text-white hover:text-white transition group text-sm font-medium';
+                    linkTile.className = 'glass-card px-3 sm:px-4 py-2 sm:py-2.5 rounded-2xl flex items-center space-x-2 text-white hover:text-white transition group text-xs sm:text-sm font-medium shrink-0';
                     
                     linkTile.innerHTML = `
                         <span class="material-symbols-outlined text-indigo-200 group-hover:text-white group-hover:scale-110 transition-transform">
                             ${iconName}
                         </span>
-                        <span class="text-shadow-md">${link.title}</span>
+                        <span class="text-shadow-md truncate max-w-[120px] sm:max-w-[160px]">${link.title}</span>
                     `;
                     container.appendChild(linkTile);
 
                     if (editorList) {
                         const row = document.createElement('div');
-                        row.className = 'flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10 text-xs';
+                        row.className = 'flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/10 text-xs';
                         row.innerHTML = `
-                            <div class="flex items-center space-x-3 truncate mr-2">
+                            <div class="flex items-center space-x-2.5 truncate mr-2">
                                 <span class="material-symbols-outlined text-indigo-300">${iconName}</span>
                                 <div class="truncate">
-                                    <p class="font-medium text-white">${link.title}</p>
-                                    <p class="text-slate-400 truncate text-[11px]">${link.url}</p>
+                                    <p class="font-medium text-white truncate">${link.title}</p>
+                                    <p class="text-slate-400 truncate text-[10px]">${link.url}</p>
                                 </div>
                             </div>
-                            <button data-id="${link.id}" class="btn-delete-link p-1.5 rounded-lg hover:bg-red-500/20 text-red-400 transition">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            <button data-id="${link.id}" class="btn-delete-link p-1 rounded-lg hover:bg-red-500/20 text-red-400 transition shrink-0">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                             </button>
                         `;
                         editorList.appendChild(row);
@@ -728,8 +765,8 @@
                 materialPresets.forEach(icon => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
-                    btn.className = 'p-1.5 rounded-lg bg-white/5 hover:bg-white/20 border border-white/10 text-slate-200 hover:text-white transition flex items-center justify-center';
-                    btn.innerHTML = `<span class="material-symbols-outlined text-base">${icon}</span>`;
+                    btn.className = 'p-1 rounded-lg bg-white/5 hover:bg-white/20 border border-white/10 text-slate-200 hover:text-white transition flex items-center justify-center';
+                    btn.innerHTML = `<span class="material-symbols-outlined text-sm">${icon}</span>`;
                     btn.addEventListener('click', () => {
                         iconInput.value = icon;
                         previewEl.textContent = icon;
@@ -760,14 +797,14 @@
                 list.innerHTML = '';
                 config.todos.forEach(todo => {
                     const li = document.createElement('li');
-                    li.className = `flex items-center justify-between p-3 rounded-xl glass-card text-xs group transition ${todo.completed ? 'opacity-50' : ''}`;
+                    li.className = `flex items-center justify-between p-2.5 sm:p-3 rounded-xl glass-card text-xs group transition ${todo.completed ? 'opacity-50' : ''}`;
                     li.innerHTML = `
-                        <div class="flex items-center space-x-3 cursor-pointer flex-1" data-id="${todo.id}">
-                            <input type="checkbox" ${todo.completed ? 'checked' : ''} class="w-4 h-4 rounded accent-indigo-500 cursor-pointer">
-                            <span class="${todo.completed ? 'line-through text-slate-400' : 'text-white'} font-medium select-none">${todo.text}</span>
+                        <div class="flex items-center space-x-2.5 cursor-pointer flex-1 min-w-0" data-id="${todo.id}">
+                            <input type="checkbox" ${todo.completed ? 'checked' : ''} class="w-3.5 h-3.5 rounded accent-indigo-500 cursor-pointer shrink-0">
+                            <span class="${todo.completed ? 'line-through text-slate-400' : 'text-white'} font-medium select-none truncate">${todo.text}</span>
                         </div>
-                        <button data-id="${todo.id}" class="btn-delete-todo opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-400 transition">
-                            <i data-lucide="x" class="w-4 h-4"></i>
+                        <button data-id="${todo.id}" class="btn-delete-todo opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-400 transition shrink-0">
+                            <i data-lucide="x" class="w-3.5 h-3.5"></i>
                         </button>
                     `;
                     list.appendChild(li);
@@ -1115,6 +1152,15 @@
                         }
                     };
                     reader.readAsText(file);
+                });
+
+                // Auto-adapt on screen resize
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        updateClock();
+                    }, 100);
                 });
             }
 
