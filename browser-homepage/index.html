@@ -1,249 +1,1135 @@
-<!-- fuckass browser, report any bugs in issues please -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stylish Home Page</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: linear-gradient(135deg, #1e1e1e, #2c3e50);
-      font-family: 'Poppins', sans-serif;
-      overflow: hidden;
-      color: #fff;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tab</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN for UI Controls -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Poppins, Playfair Display, JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Google Material Symbols / Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-    #clock {
-      font-size: 100px;
-      font-weight: 600;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-      animation: pulse 2s infinite;
-      margin-bottom: 0px;
-    }
-
-    #greeting {
-      font-size: 21px;
-      margin-bottom: 40px;
-      color: rgba(255, 255, 255, 0.85);
-      text-align: center;
-      max-width: 80%;
-    }
-
-    @keyframes pulse {
-      0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
-      50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.4); }
-    }
-
-    .search-container {
-      width: 90%;
-      max-width: 800px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-    }
-
-    .search-bar {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      border-radius: 36px;
-      background-color: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      transition: box-shadow 0.3s;
-      padding: 0 16px;
-      position: relative;
-      z-index: 2;
-      font-family: 'Poppins';
-    }
-
-    .search-bar:focus-within {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    }
-
-    .search-bar input[type="text"] {
-      flex: 1;
-      padding: 12px 16px;
-      font-size: 18px;
-      border: none;
-      outline: none;
-      border-radius: 36px;
-      font-family: 'Poppins';
-    }
-
-    .search-bar input::placeholder {
-      color: #888;
-      font-family: 'Poppins';
-    }
-
-    /* Suggestions dropdown */
-    #suggestions {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: #fff;
-      border-radius: 12px;
-      margin-top: 6px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    #suggestions div {
-      padding: 12px 16px;
-      font-size: 16px;
-      color: #333;
-      cursor: pointer;
-    }
-
-    #suggestions div:hover,
-    #suggestions .highlighted {
-      background: #f0f0f0;
-    }
-
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
-<body>
-
-  <div id="clock">00:00</div>
-  <div id="greeting">Hello!</div>
-
-  <div class="search-container">
-    <form id="searchForm" class="search-bar">
-      <input type="text" id="searchInput" placeholder="Search or enter a URL..." autocomplete="off" required>
-      <button type="submit" hidden>Go</button>
-    </form>
-    <div id="suggestions" class="hidden"></div>
-  </div>
-
-  <script>
-    function updateClock() {
-      const clock = document.getElementById('clock');
-      const now = new Date();
-      const hours = String(now.getHours()).padStart(2, '0');
-      const minutes = String(now.getMinutes()).padStart(2, '0');
-      clock.textContent = `${hours}:${minutes}`;
-    }
-
-    function updateGreeting() {
-      const greeting = document.getElementById('greeting');
-      const hour = new Date().getHours();
-      let options = [];
-
-      if (hour >= 5 && hour < 12) {
-        options = ["Good morning!", "Morning sunshine!", "Rise and shine!"];
-      } else if (hour >= 12 && hour < 17) {
-        options = ["Good afternoon!", "Keep going strong!", "Hope your day’s great!"];
-      } else if (hour >= 17 && hour < 21) {
-        options = ["Good evening!", "Relax and unwind.", "Evening vibes 🌆"];
-      } else {
-        options = ["Good night!", "Sweet dreams!", "Rest well 🌙"];
-      }
-
-      greeting.textContent = options[Math.floor(Math.random() * options.length)];
-    }
-
-    const form = document.getElementById('searchForm');
-    const input = document.getElementById('searchInput');
-    const suggestionsBox = document.getElementById('suggestions');
-    let currentIndex = -1;
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const query = input.value.trim();
-      if (!query) return;
-
-      if (query.match(/^https?:\/\//i)) {
-        window.location.href = query;
-      } else if (query.match(/^[\w.-]+\.[a-z]{2,}$/i)) {
-        window.location.href = "https://" + query;
-      } else {
-        window.location.href = "https://www.google.com/search?q=" + encodeURIComponent(query);
-      }
-    });
-
-    input.addEventListener('input', async () => {
-      const query = input.value.trim();
-      currentIndex = -1;
-      if (!query) {
-        suggestionsBox.classList.add('hidden');
-        return;
-      }
-
-      try {
-        const res = await fetch(`https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(query)}`);
-        const data = await res.json();
-        const suggestions = data[1];
-
-        if (suggestions.length > 0) {
-          suggestionsBox.innerHTML = '';
-          suggestions.forEach(s => {
-            const div = document.createElement('div');
-            div.textContent = s;
-            div.addEventListener('click', () => {
-              input.value = s;
-              form.requestSubmit();
-            });
-            suggestionsBox.appendChild(div);
-          });
-          suggestionsBox.classList.remove('hidden');
-        } else {
-          suggestionsBox.classList.add('hidden');
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        glass: {
+                            DEFAULT: 'rgba(255, 255, 255, 0.12)',
+                            dark: 'rgba(0, 0, 0, 0.25)',
+                            border: 'rgba(255, 255, 255, 0.18)',
+                            hover: 'rgba(255, 255, 255, 0.22)'
+                        }
+                    }
+                }
+            }
         }
-      } catch (err) {
-        suggestionsBox.classList.add('hidden');
-      }
-    });
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
 
-    input.addEventListener('keydown', (e) => {
-      const items = suggestionsBox.querySelectorAll('div');
-      if (suggestionsBox.classList.contains('hidden') || items.length === 0) return;
+        .material-symbols-outlined {
+            font-size: 22px;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+        }
 
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        currentIndex = (currentIndex + 1) % items.length;
-        updateHighlight(items);
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        currentIndex = (currentIndex - 1 + items.length) % items.length;
-        updateHighlight(items);
-      } else if (e.key === 'Enter' && currentIndex >= 0) {
-        e.preventDefault();
-        items[currentIndex].click();
-      }
-    });
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
 
-    function updateHighlight(items) {
-      items.forEach((item, idx) => {
-        item.classList.toggle('highlighted', idx === currentIndex);
-      });
-    }
+        .glass-panel {
+            background: rgba(18, 18, 24, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
 
-    document.addEventListener('click', (e) => {
-      if (!form.contains(e.target)) {
-        suggestionsBox.classList.add('hidden');
-        currentIndex = -1;
-      }
-    });
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    setInterval(updateClock, 1000);
-    setInterval(updateGreeting, 60000);
-    updateClock();
-    updateGreeting();
-  </script>
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.28);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
 
+        .glass-input {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        .glass-input:focus {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.4);
+            outline: none;
+        }
+
+        #bg-layer {
+            transition: background-image 0.8s ease-in-out, background-color 0.8s ease, filter 0.3s ease;
+        }
+
+        .text-shadow-md {
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+        .text-shadow-lg {
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
+        }
+
+        .drawer-slide {
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+</head>
+<body class="h-full w-full overflow-hidden select-none font-poppins text-white bg-slate-900 relative">
+
+    <div id="bg-layer" class="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105"></div>
+    <div id="bg-overlay" class="absolute inset-0 bg-black transition-opacity duration-300" style="opacity: 0.25;"></div>
+
+    <div class="relative z-10 flex flex-col justify-between h-full p-6 md:p-10 max-w-7xl mx-auto overflow-y-auto">
+
+        <!-- Header Widgets -->
+        <header class="flex justify-between items-start w-full">
+            <div id="widget-weather" class="glass-card rounded-2xl p-4 flex items-center space-x-3 text-shadow-md transition-all">
+                <div id="weather-icon-container">
+                    <i data-lucide="cloud-sun" class="w-8 h-8 text-yellow-300"></i>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span id="weather-temp" class="text-xl font-semibold tracking-tight">--°C</span>
+                        <span id="weather-city" class="text-xs font-medium uppercase tracking-wider text-slate-300 opacity-90">Loading...</span>
+                    </div>
+                    <div id="weather-desc" class="text-xs text-slate-300 capitalize">Fetching forecast</div>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <button id="btn-todo" title="To-Do List" class="glass-card p-3 rounded-full hover:bg-white/20 transition text-white">
+                    <i data-lucide="check-square" class="w-5 h-5"></i>
+                </button>
+                <button id="btn-refresh-bg" title="New Background Photo" class="glass-card p-3 rounded-full hover:bg-white/20 transition text-white">
+                    <i data-lucide="image" class="w-5 h-5"></i>
+                </button>
+                <button id="btn-settings" title="Settings" class="glass-card p-3 rounded-full hover:bg-white/20 transition text-white">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex flex-col items-center justify-center my-auto py-6 text-center space-y-6 max-w-3xl mx-auto w-full">
+            
+            <div id="widget-clock" class="space-y-1">
+                <h1 id="clock-display" class="text-6xl sm:text-8xl md:text-9xl font-bold tracking-tight text-shadow-lg font-poppins">
+                    00:00
+                </h1>
+                <h2 id="greeting-display" class="text-xl sm:text-3xl font-medium text-shadow-md text-slate-100 opacity-90">
+                    Good day
+                </h2>
+                <div id="date-display" class="text-xs sm:text-sm text-slate-300 font-light tracking-widest uppercase text-shadow-md pt-1">
+                    Monday, January 1
+                </div>
+            </div>
+
+            <!-- Quote Widget under Clock -->
+            <div id="widget-quote" class="w-full max-w-lg glass-card rounded-2xl p-4 sm:p-5 relative group transition hover:border-white/30 my-2">
+                <p id="quote-text" class="text-xs sm:text-sm font-poppins font-normal text-slate-100 text-shadow-md">
+                    "Simplicity is the ultimate sophistication."
+                </p>
+                <p id="quote-author" class="text-[11px] font-poppins text-slate-300 mt-1.5 tracking-wide text-shadow-md">
+                    — Leonardo da Vinci
+                </p>
+                <button id="btn-next-quote" title="Get new quote" class="absolute right-3 bottom-3 opacity-0 group-hover:opacity-100 transition p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white">
+                    <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+
+            <!-- Search Bar Widget with Google Logo -->
+            <div id="widget-search" class="w-full max-w-xl">
+                <form id="search-form" class="relative flex items-center">
+                    <div class="absolute left-4 flex items-center justify-center pointer-events-none">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                        </svg>
+                    </div>
+                    <input type="text" id="search-input" placeholder="Search the web or enter URL..." 
+                           class="w-full pl-12 pr-12 py-3.5 rounded-2xl glass-input text-base sm:text-lg placeholder-slate-400 focus:ring-2 focus:ring-white/40 transition shadow-lg">
+                    <button type="submit" class="absolute right-3 p-1.5 rounded-xl text-slate-300 hover:text-white hover:bg-white/10 transition">
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Quick Links -->
+            <div id="widget-links" class="w-full pt-2">
+                <div id="links-container" class="flex flex-wrap justify-center gap-3.5 max-w-2xl mx-auto"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- TO-DO LIST SLIDE PANEL -->
+    <div id="panel-todo" class="fixed top-0 right-0 h-full w-full sm:w-96 glass-panel z-30 drawer-slide transform translate-x-full flex flex-col justify-between p-6 shadow-2xl">
+        <div>
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="check-square" class="w-5 h-5 text-indigo-400"></i>
+                    <h3 class="text-lg font-semibold text-white">Tasks & Notes</h3>
+                </div>
+                <button id="close-todo" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="todo-form" class="flex space-x-2 mb-4">
+                <input type="text" id="todo-input" placeholder="Add a new task..." 
+                       class="flex-1 glass-input px-3 py-2 rounded-xl text-sm placeholder-slate-400 focus:ring-1 focus:ring-white/40">
+                <button type="submit" class="px-3 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-medium text-sm transition flex items-center justify-center">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                </button>
+            </form>
+
+            <ul id="todo-list" class="space-y-2 max-h-[60vh] overflow-y-auto pr-1"></ul>
+        </div>
+
+        <div class="text-xs text-slate-400 text-center pt-4 border-t border-white/10">
+            Click tasks to mark completed.
+        </div>
+    </div>
+
+    <!-- SETTINGS SIDEBAR DRAWER -->
+    <div id="panel-settings" class="fixed top-0 right-0 h-full w-full sm:w-96 glass-panel z-40 drawer-slide transform translate-x-full flex flex-col p-6 shadow-2xl overflow-y-auto">
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="sliders" class="w-5 h-5 text-indigo-400"></i>
+                <h3 class="text-lg font-semibold text-white">Customize Homepage</h3>
+            </div>
+            <button id="close-settings" class="p-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/10">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <div class="space-y-6 flex-1 text-sm">
+            
+            <div class="space-y-2">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Your Name</label>
+                <input type="text" id="setting-user-name" placeholder="Enter name" 
+                       class="w-full glass-input px-3 py-2 rounded-xl text-sm">
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-white/10">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Weather Location</label>
+                <input type="text" id="setting-weather-location" placeholder="e.g. London or Auto-detect" 
+                       class="w-full glass-input px-3 py-2 rounded-xl text-sm">
+                <p class="text-[11px] text-slate-400">Leave blank to use automatic location detection.</p>
+            </div>
+
+            <!-- Background Source Selection (API-Keyless Options) -->
+            <div class="space-y-3 pt-2 border-t border-white/10">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Background Source</label>
+                <select id="setting-bg-mode" class="w-full glass-input px-3 py-2 rounded-xl text-sm bg-slate-900/80">
+                    <option value="picsum">Picsum Photos (Keyless HD)</option>
+                    <option value="curated">Curated Nature (Direct HD)</option>
+                    <option value="gradient">Gradient Presets</option>
+                    <option value="solid">Solid Colors</option>
+                    <option value="custom">Custom Image URL</option>
+                </select>
+
+                <div id="bg-opt-custom" class="space-y-2 hidden">
+                    <label class="block text-xs text-slate-400">Image URL</label>
+                    <input type="text" id="setting-bg-url" placeholder="https://images.unsplash.com/photo-..." 
+                           class="w-full glass-input px-3 py-2 rounded-xl text-sm">
+                </div>
+
+                <div id="bg-opt-gradient" class="space-y-2 hidden">
+                    <label class="block text-xs text-slate-400">Select Gradient</label>
+                    <select id="setting-bg-gradient" class="w-full glass-input px-3 py-2 rounded-xl text-sm bg-slate-900/80">
+                        <option value="linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)">Deep Midnight</option>
+                        <option value="linear-gradient(135deg, #181825 0%, #313244 100%)">Catppuccin Mocha</option>
+                        <option value="linear-gradient(135deg, #2e1065 0%, #701a75 100%)">Neon Dusk</option>
+                        <option value="linear-gradient(135deg, #064e3b 0%, #022c22 100%)">Forest Mist</option>
+                        <option value="linear-gradient(135deg, #831843 0%, #500724 100%)">Rose Velvet</option>
+                    </select>
+                </div>
+
+                <div id="bg-opt-solid" class="space-y-2 hidden">
+                    <label class="block text-xs text-slate-400">Select Color</label>
+                    <input type="color" id="setting-bg-color" value="#0f172a" class="w-full h-10 rounded-xl cursor-pointer bg-transparent border border-white/20">
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <div>
+                        <div class="flex justify-between text-xs text-slate-300 mb-1">
+                            <span>Background Blur</span>
+                            <span id="val-blur">0px</span>
+                        </div>
+                        <input type="range" id="setting-bg-blur" min="0" max="20" value="0" class="w-full accent-indigo-400">
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-slate-300 mb-1">
+                            <span>Dark Overlay Opacity</span>
+                            <span id="val-overlay">25%</span>
+                        </div>
+                        <input type="range" id="setting-bg-overlay" min="0" max="80" value="25" class="w-full accent-indigo-400">
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-white/10">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Search Engine</label>
+                <select id="setting-search-engine" class="w-full glass-input px-3 py-2 rounded-xl text-sm bg-slate-900/80">
+                    <option value="google">Google</option>
+                    <option value="duckduckgo">DuckDuckGo</option>
+                    <option value="bing">Bing</option>
+                    <option value="ecosia">Ecosia</option>
+                </select>
+            </div>
+
+            <div class="space-y-3 pt-2 border-t border-white/10">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Clock Style</label>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-300">24-Hour Time Format</span>
+                    <input type="checkbox" id="setting-clock-24h" class="w-4 h-4 rounded accent-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Clock Font Family</label>
+                    <select id="setting-clock-font" class="w-full glass-input px-3 py-2 rounded-xl text-sm bg-slate-900/80">
+                        <option value="font-poppins">Poppins (Default Clean)</option>
+                        <option value="font-serif">Playfair (Serif Elegance)</option>
+                        <option value="font-mono">JetBrains Mono (Code)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="space-y-2 pt-2 border-t border-white/10">
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Visible Widgets</label>
+                <div class="space-y-2">
+                    <label class="flex items-center justify-between text-xs text-slate-300">
+                        <span>Clock & Greeting</span>
+                        <input type="checkbox" id="toggle-widget-clock" checked class="w-4 h-4 rounded accent-indigo-500">
+                    </label>
+                    <label class="flex items-center justify-between text-xs text-slate-300">
+                        <span>Daily Quote</span>
+                        <input type="checkbox" id="toggle-widget-quote" checked class="w-4 h-4 rounded accent-indigo-500">
+                    </label>
+                    <label class="flex items-center justify-between text-xs text-slate-300">
+                        <span>Search Bar</span>
+                        <input type="checkbox" id="toggle-widget-search" checked class="w-4 h-4 rounded accent-indigo-500">
+                    </label>
+                    <label class="flex items-center justify-between text-xs text-slate-300">
+                        <span>Speed Dial Quick Links</span>
+                        <input type="checkbox" id="toggle-widget-links" checked class="w-4 h-4 rounded accent-indigo-500">
+                    </label>
+                    <label class="flex items-center justify-between text-xs text-slate-300">
+                        <span>Weather Widget</span>
+                        <input type="checkbox" id="toggle-widget-weather" checked class="w-4 h-4 rounded accent-indigo-500">
+                    </label>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-white/10">
+                <button id="btn-manage-links" class="w-full py-2.5 px-4 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-medium text-white transition flex items-center justify-center space-x-2">
+                    <i data-lucide="link" class="w-4 h-4"></i>
+                    <span>Manage Speed Dial Shortcuts</span>
+                </button>
+            </div>
+
+            <div class="pt-2 border-t border-white/10 flex space-x-2">
+                <button id="btn-export-settings" class="flex-1 py-2 px-3 bg-white/5 hover:bg-white/10 rounded-xl text-xs text-slate-300 hover:text-white transition">
+                    Export Settings
+                </button>
+                <button id="btn-import-settings" class="flex-1 py-2 px-3 bg-white/5 hover:bg-white/10 rounded-xl text-xs text-slate-300 hover:text-white transition">
+                    Import Settings
+                </button>
+                <input type="file" id="import-file-input" class="hidden" accept=".json">
+            </div>
+        </div>
+    </div>
+
+    <!-- MANAGE QUICK LINKS MODAL -->
+    <div id="modal-links" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+        <div class="glass-panel w-full max-w-md rounded-2xl p-6 space-y-4 shadow-2xl border border-white/20 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center pb-3 border-b border-white/10">
+                <h3 class="text-lg font-semibold text-white">Speed Dial Shortcuts</h3>
+                <button id="close-links-modal" class="p-1 rounded-lg text-slate-300 hover:text-white hover:bg-white/10">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form id="add-link-form" class="space-y-3">
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">Shortcut Title</label>
+                    <input type="text" id="new-link-title" placeholder="e.g. GitHub" required class="w-full glass-input px-3 py-2 rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">URL</label>
+                    <input type="url" id="new-link-url" placeholder="https://github.com" required class="w-full glass-input px-3 py-2 rounded-xl text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-300 mb-1">Material Icon Name</label>
+                    <div class="flex space-x-2">
+                        <input type="text" id="new-link-icon" placeholder="e.g. code, language, play_arrow" required class="flex-1 glass-input px-3 py-2 rounded-xl text-sm">
+                        <div id="icon-preview" class="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white">
+                            <span class="material-symbols-outlined">language</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] text-slate-400 mb-1.5">Preset Material Icons</label>
+                    <div id="icon-presets" class="flex flex-wrap gap-1.5"></div>
+                </div>
+
+                <button type="submit" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-medium transition flex items-center justify-center space-x-2 pt-2">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Add Shortcut</span>
+                </button>
+            </form>
+
+            <div class="pt-2 border-t border-white/10">
+                <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Existing Shortcuts</label>
+                <div id="quick-links-editor-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const materialPresets = [
+                'language', 'code', 'play_arrow', 'forum', 'mail', 'shopping_cart',
+                'news', 'school', 'article', 'hub', 'explore', 'dashboard', 'search',
+                'description', 'photo_camera', 'movie', 'headset', 'work', 'terminal', 'cloud'
+            ];
+
+            const domainIconMap = {
+                'google.com': 'search',
+                'youtube.com': 'play_arrow',
+                'github.com': 'code',
+                'reddit.com': 'forum',
+                'twitter.com': 'news',
+                'x.com': 'news',
+                'gmail.com': 'mail',
+                'amazon.com': 'shopping_cart',
+                'wikipedia.org': 'school',
+                'medium.com': 'article',
+                'linkedin.com': 'work',
+                'netflix.com': 'movie',
+                'spotify.com': 'headset'
+            };
+
+            // Keyless Curated High-Res Direct Images (Reliable Unsplash CDN URLs)
+            const curatedWallpapers = [
+                'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1920&q=80',
+                'https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=1920&q=80',
+                'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1920&q=80',
+                'https://images.unsplash.com/photo-1511884642898-4c92249e20b6?auto=format&fit=crop&w=1920&q=80',
+                'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=1920&q=80',
+                'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1920&q=80'
+            ];
+
+            const defaultConfig = {
+                userName: '',
+                weatherLocation: '',
+                clock24h: false,
+                clockFont: 'font-poppins',
+                searchEngine: 'google',
+                bgMode: 'picsum', // Default to reliable Picsum
+                bgUrl: '',
+                bgGradient: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)',
+                bgColor: '#0f172a',
+                bgBlur: 0,
+                bgOverlay: 25,
+                visibleWidgets: {
+                    clock: true,
+                    quote: true,
+                    search: true,
+                    links: true,
+                    weather: true
+                },
+                links: [
+                    { id: '1', title: 'Google', url: 'https://google.com', icon: 'search' },
+                    { id: '2', title: 'YouTube', url: 'https://youtube.com', icon: 'play_arrow' },
+                    { id: '3', title: 'GitHub', url: 'https://github.com', icon: 'code' },
+                    { id: '4', title: 'Reddit', url: 'https://reddit.com', icon: 'forum' }
+                ],
+                todos: [
+                    { id: '1', text: 'Say hi', completed: false }
+                ]
+            };
+
+            const quotesList = [
+                { quote: "Simplicity is the ultimate sophistication.", author: "Leonardo da Vinci" },
+                { quote: "It always seems impossible until it’s done.", author: "Nelson Mandela" },
+                { quote: "Turn your wounds into wisdom.", author: "Oprah Winfrey" },
+                { quote: "Focus on being productive instead of busy.", author: "Tim Ferriss" },
+                { quote: "Act as if what you do makes a difference. It does.", author: "William James" },
+                { quote: "Light tomorrow with today.", author: "Elizabeth Barrett Browning" }
+            ];
+
+            const searchEngines = {
+                google: 'https://www.google.com/search?q=',
+                duckduckgo: 'https://duckduckgo.com/?q=',
+                bing: 'https://www.bing.com/search?q=',
+                ecosia: 'https://www.ecosia.org/search?q='
+            };
+
+            let config = JSON.parse(localStorage.getItem('tabliss_config')) || defaultConfig;
+            if (config.bgMode === 'unsplash') config.bgMode = 'picsum'; // Migrate deprecated setting
+            config = { ...defaultConfig, ...config, visibleWidgets: { ...defaultConfig.visibleWidgets, ...config.visibleWidgets } };
+
+            function saveConfig() {
+                localStorage.setItem('tabliss_config', JSON.stringify(config));
+            }
+
+            function refreshIcons() {
+                if (window.lucide) lucide.createIcons();
+            }
+
+            function updateClock() {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                
+                if (!config.clock24h) {
+                    hours = hours % 12 || 12;
+                }
+                const formattedHours = String(hours).padStart(2, '0');
+                
+                const clockEl = document.getElementById('clock-display');
+                if (clockEl) {
+                    clockEl.textContent = `${formattedHours}:${minutes}`;
+                    clockEl.className = `${config.clockFont} text-6xl sm:text-8xl md:text-9xl font-bold tracking-tight text-shadow-lg`;
+                }
+
+                const curHour = now.getHours();
+                let timeGreeting = "Good day";
+                if (curHour < 12) timeGreeting = "Good morning";
+                else if (curHour < 18) timeGreeting = "Good afternoon";
+                else timeGreeting = "Good evening";
+
+                const greetingEl = document.getElementById('greeting-display');
+                if (greetingEl) {
+                    const nameSuffix = config.userName.trim() ? `, ${config.userName.trim()}` : '';
+                    greetingEl.textContent = `${timeGreeting}${nameSuffix}`;
+                }
+
+                const options = { weekday: 'long', month: 'long', day: 'numeric' };
+                const dateEl = document.getElementById('date-display');
+                if (dateEl) {
+                    dateEl.textContent = now.toLocaleDateString('en-US', options);
+                }
+            }
+
+            async function fetchWeather() {
+                const tempEl = document.getElementById('weather-temp');
+                const cityEl = document.getElementById('weather-city');
+                const descEl = document.getElementById('weather-desc');
+
+                if (!tempEl) return;
+
+                const userCity = (config.weatherLocation || '').trim();
+
+                if (userCity) {
+                    try {
+                        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(userCity)}&count=1&language=en&format=json`);
+                        const geoData = await geoRes.json();
+
+                        if (geoData && geoData.results && geoData.results.length > 0) {
+                            const { latitude, longitude, name, country } = geoData.results[0];
+                            const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+                            const weatherData = await weatherRes.json();
+
+                            if (weatherData && weatherData.current_weather) {
+                                tempEl.textContent = `${Math.round(weatherData.current_weather.temperature)}°C`;
+                                cityEl.textContent = `${name}${country ? ', ' + country : ''}`;
+                                descEl.textContent = getWeatherDesc(weatherData.current_weather.weathercode);
+                                return;
+                            }
+                        }
+                    } catch (err) {
+                        fallbackWeather();
+                        return;
+                    }
+                }
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(async (position) => {
+                        try {
+                            const lat = position.coords.latitude;
+                            const lon = position.coords.longitude;
+                            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+                            const data = await res.json();
+                            
+                            if (data && data.current_weather) {
+                                const temp = Math.round(data.current_weather.temperature);
+                                tempEl.textContent = `${temp}°C`;
+                                cityEl.textContent = "Your Location";
+                                descEl.textContent = getWeatherDesc(data.current_weather.weathercode);
+                            }
+                        } catch (err) {
+                            fallbackWeather();
+                        }
+                    }, () => {
+                        fallbackWeather();
+                    });
+                } else {
+                    fallbackWeather();
+                }
+            }
+
+            function fallbackWeather() {
+                document.getElementById('weather-temp').textContent = '21°C';
+                document.getElementById('weather-city').textContent = 'Sunnyvale';
+                document.getElementById('weather-desc').textContent = 'Partly Cloudy';
+            }
+
+            function getWeatherDesc(code) {
+                if (code === 0) return 'Clear Sky';
+                if (code <= 3) return 'Partly Cloudy';
+                if (code <= 48) return 'Foggy';
+                if (code <= 67) return 'Rainy';
+                if (code <= 77) return 'Snowy';
+                return 'Thunderstorm';
+            }
+
+            function applyBackground() {
+                const bgLayer = document.getElementById('bg-layer');
+                const bgOverlay = document.getElementById('bg-overlay');
+
+                if (!bgLayer || !bgOverlay) return;
+
+                bgLayer.style.filter = `blur(${config.bgBlur}px)`;
+                bgOverlay.style.opacity = (config.bgOverlay / 100).toString();
+
+                if (config.bgMode === 'picsum') {
+                    // Uses keyless Picsum random photos with cache busting seed
+                    const seed = Math.floor(Math.random() * 10000);
+                    bgLayer.style.backgroundImage = `url('https://picsum.photos/seed/${seed}/1920/1080')`;
+                    bgLayer.style.backgroundColor = '';
+                } else if (config.bgMode === 'curated') {
+                    // Pick a direct high-res photo from array
+                    const randomIndex = Math.floor(Math.random() * curatedWallpapers.length);
+                    bgLayer.style.backgroundImage = `url('${curatedWallpapers[randomIndex]}')`;
+                    bgLayer.style.backgroundColor = '';
+                } else if (config.bgMode === 'custom' && config.bgUrl) {
+                    bgLayer.style.backgroundImage = `url('${config.bgUrl}')`;
+                    bgLayer.style.backgroundColor = '';
+                } else if (config.bgMode === 'gradient') {
+                    bgLayer.style.backgroundImage = config.bgGradient;
+                    bgLayer.style.backgroundColor = '';
+                } else if (config.bgMode === 'solid') {
+                    bgLayer.style.backgroundImage = 'none';
+                    bgLayer.style.backgroundColor = config.bgColor;
+                }
+            }
+
+            function renderQuickLinks() {
+                const container = document.getElementById('links-container');
+                const editorList = document.getElementById('quick-links-editor-list');
+                if (!container) return;
+
+                container.innerHTML = '';
+                if (editorList) editorList.innerHTML = '';
+
+                config.links.forEach((link) => {
+                    const iconName = link.icon || 'language';
+
+                    const linkTile = document.createElement('a');
+                    linkTile.href = link.url;
+                    linkTile.target = '_self';
+                    linkTile.className = 'glass-card px-4 py-3 rounded-2xl flex items-center space-x-2.5 text-white hover:text-white transition group text-sm font-medium';
+                    
+                    linkTile.innerHTML = `
+                        <span class="material-symbols-outlined text-indigo-200 group-hover:text-white group-hover:scale-110 transition-transform">
+                            ${iconName}
+                        </span>
+                        <span class="text-shadow-md">${link.title}</span>
+                    `;
+                    container.appendChild(linkTile);
+
+                    if (editorList) {
+                        const row = document.createElement('div');
+                        row.className = 'flex items-center justify-between p-2.5 rounded-xl bg-white/5 border border-white/10 text-xs';
+                        row.innerHTML = `
+                            <div class="flex items-center space-x-3 truncate mr-2">
+                                <span class="material-symbols-outlined text-indigo-300">${iconName}</span>
+                                <div class="truncate">
+                                    <p class="font-medium text-white">${link.title}</p>
+                                    <p class="text-slate-400 truncate text-[11px]">${link.url}</p>
+                                </div>
+                            </div>
+                            <button data-id="${link.id}" class="btn-delete-link p-1.5 rounded-lg hover:bg-red-500/20 text-red-400 transition">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        `;
+                        editorList.appendChild(row);
+                    }
+                });
+
+                document.querySelectorAll('.btn-delete-link').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.currentTarget.getAttribute('data-id');
+                        config.links = config.links.filter(l => l.id !== id);
+                        saveConfig();
+                        renderQuickLinks();
+                    });
+                });
+
+                refreshIcons();
+            }
+
+            function setupIconPresetPicker() {
+                const presetContainer = document.getElementById('icon-presets');
+                const iconInput = document.getElementById('new-link-icon');
+                const previewEl = document.querySelector('#icon-preview .material-symbols-outlined');
+                const urlInput = document.getElementById('new-link-url');
+
+                if (!presetContainer || !iconInput || !previewEl) return;
+
+                presetContainer.innerHTML = '';
+                materialPresets.forEach(icon => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'p-1.5 rounded-lg bg-white/5 hover:bg-white/20 border border-white/10 text-slate-200 hover:text-white transition flex items-center justify-center';
+                    btn.innerHTML = `<span class="material-symbols-outlined text-base">${icon}</span>`;
+                    btn.addEventListener('click', () => {
+                        iconInput.value = icon;
+                        previewEl.textContent = icon;
+                    });
+                    presetContainer.appendChild(btn);
+                });
+
+                iconInput.addEventListener('input', (e) => {
+                    const val = e.target.value.trim() || 'language';
+                    previewEl.textContent = val;
+                });
+
+                urlInput?.addEventListener('blur', () => {
+                    try {
+                        const domain = new URL(urlInput.value.trim()).hostname.replace('www.', '');
+                        if (domainIconMap[domain] && (!iconInput.value || iconInput.value === 'language')) {
+                            iconInput.value = domainIconMap[domain];
+                            previewEl.textContent = domainIconMap[domain];
+                        }
+                    } catch (e) {}
+                });
+            }
+
+            function renderTodos() {
+                const list = document.getElementById('todo-list');
+                if (!list) return;
+
+                list.innerHTML = '';
+                config.todos.forEach(todo => {
+                    const li = document.createElement('li');
+                    li.className = `flex items-center justify-between p-3 rounded-xl glass-card text-xs group transition ${todo.completed ? 'opacity-50' : ''}`;
+                    li.innerHTML = `
+                        <div class="flex items-center space-x-3 cursor-pointer flex-1" data-id="${todo.id}">
+                            <input type="checkbox" ${todo.completed ? 'checked' : ''} class="w-4 h-4 rounded accent-indigo-500 cursor-pointer">
+                            <span class="${todo.completed ? 'line-through text-slate-400' : 'text-white'} font-medium select-none">${todo.text}</span>
+                        </div>
+                        <button data-id="${todo.id}" class="btn-delete-todo opacity-0 group-hover:opacity-100 p-1 text-slate-400 hover:text-red-400 transition">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
+                    `;
+                    list.appendChild(li);
+                });
+
+                list.querySelectorAll('div[data-id]').forEach(el => {
+                    el.addEventListener('click', () => {
+                        const id = el.getAttribute('data-id');
+                        const todo = config.todos.find(t => t.id === id);
+                        if (todo) {
+                            todo.completed = !todo.completed;
+                            saveConfig();
+                            renderTodos();
+                        }
+                    });
+                });
+
+                list.querySelectorAll('.btn-delete-todo').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const id = btn.getAttribute('data-id');
+                        config.todos = config.todos.filter(t => t.id !== id);
+                        saveConfig();
+                        renderTodos();
+                    });
+                });
+
+                refreshIcons();
+            }
+
+            function setRandomQuote() {
+                const quoteText = document.getElementById('quote-text');
+                const quoteAuthor = document.getElementById('quote-author');
+                if (!quoteText || !quoteAuthor) return;
+
+                const item = quotesList[Math.floor(Math.random() * quotesList.length)];
+                quoteText.textContent = `"${item.quote}"`;
+                quoteAuthor.textContent = `— ${item.author}`;
+            }
+
+            function applyWidgetVisibility() {
+                const wMap = {
+                    clock: document.getElementById('widget-clock'),
+                    quote: document.getElementById('widget-quote'),
+                    search: document.getElementById('widget-search'),
+                    links: document.getElementById('widget-links'),
+                    weather: document.getElementById('widget-weather')
+                };
+
+                for (let key in wMap) {
+                    if (wMap[key]) {
+                        if (config.visibleWidgets[key]) {
+                            wMap[key].classList.remove('hidden');
+                        } else {
+                            wMap[key].classList.add('hidden');
+                        }
+                    }
+                }
+            }
+
+            function initEventListeners() {
+                const weatherLocInput = document.getElementById('setting-weather-location');
+                if (weatherLocInput) {
+                    weatherLocInput.value = config.weatherLocation || '';
+                    weatherLocInput.addEventListener('change', (e) => {
+                        config.weatherLocation = e.target.value;
+                        saveConfig();
+                        fetchWeather();
+                    });
+                }
+
+                setInterval(updateClock, 1000);
+                updateClock();
+
+                const searchForm = document.getElementById('search-form');
+                if (searchForm) {
+                    searchForm.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const query = document.getElementById('search-input').value.trim();
+                        if (!query) return;
+
+                        if (/^(http|https):\/\//i.test(query)) {
+                            window.location.href = query;
+                        } else if (query.includes('.') && !query.includes(' ')) {
+                            window.location.href = `https://${query}`;
+                        } else {
+                            const baseUrl = searchEngines[config.searchEngine] || searchEngines.google;
+                            window.location.href = baseUrl + encodeURIComponent(query);
+                        }
+                    });
+                }
+
+                const btnSettings = document.getElementById('btn-settings');
+                const panelSettings = document.getElementById('panel-settings');
+                const closeSettings = document.getElementById('close-settings');
+
+                btnSettings?.addEventListener('click', () => {
+                    panelSettings?.classList.remove('translate-x-full');
+                });
+
+                closeSettings?.addEventListener('click', () => {
+                    panelSettings?.classList.add('translate-x-full');
+                });
+
+                const btnTodo = document.getElementById('btn-todo');
+                const panelTodo = document.getElementById('panel-todo');
+                const closeTodo = document.getElementById('close-todo');
+
+                btnTodo?.addEventListener('click', () => {
+                    panelTodo?.classList.remove('translate-x-full');
+                });
+
+                closeTodo?.addEventListener('click', () => {
+                    panelTodo?.classList.add('translate-x-full');
+                });
+
+                document.getElementById('btn-refresh-bg')?.addEventListener('click', () => {
+                    applyBackground();
+                });
+
+                document.getElementById('btn-next-quote')?.addEventListener('click', () => {
+                    setRandomQuote();
+                });
+
+                document.getElementById('todo-form')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const input = document.getElementById('todo-input');
+                    const text = input.value.trim();
+                    if (text) {
+                        config.todos.push({
+                            id: Date.now().toString(),
+                            text: text,
+                            completed: false
+                        });
+                        saveConfig();
+                        renderTodos();
+                        input.value = '';
+                    }
+                });
+
+                const modalLinks = document.getElementById('modal-links');
+                document.getElementById('btn-manage-links')?.addEventListener('click', () => {
+                    modalLinks?.classList.remove('opacity-0', 'pointer-events-none');
+                });
+
+                document.getElementById('close-links-modal')?.addEventListener('click', () => {
+                    modalLinks?.classList.add('opacity-0', 'pointer-events-none');
+                });
+
+                document.getElementById('add-link-form')?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const titleInput = document.getElementById('new-link-title');
+                    const urlInput = document.getElementById('new-link-url');
+                    const iconInput = document.getElementById('new-link-icon');
+                    
+                    let url = urlInput.value.trim();
+                    if (!/^https?:\/\//i.test(url)) {
+                        url = 'https://' + url;
+                    }
+
+                    config.links.push({
+                        id: Date.now().toString(),
+                        title: titleInput.value.trim(),
+                        url: url,
+                        icon: iconInput.value.trim() || 'language'
+                    });
+
+                    saveConfig();
+                    renderQuickLinks();
+
+                    titleInput.value = '';
+                    urlInput.value = '';
+                    iconInput.value = '';
+                    document.querySelector('#icon-preview .material-symbols-outlined').textContent = 'language';
+                });
+
+                const nameInput = document.getElementById('setting-user-name');
+                if (nameInput) {
+                    nameInput.value = config.userName;
+                    nameInput.addEventListener('input', (e) => {
+                        config.userName = e.target.value;
+                        saveConfig();
+                        updateClock();
+                    });
+                }
+
+                const bgModeSelect = document.getElementById('setting-bg-mode');
+                const optCustom = document.getElementById('bg-opt-custom');
+                const optGradient = document.getElementById('bg-opt-gradient');
+                const optSolid = document.getElementById('bg-opt-solid');
+
+                function updateBgSettingsUI() {
+                    optCustom?.classList.add('hidden');
+                    optGradient?.classList.add('hidden');
+                    optSolid?.classList.add('hidden');
+
+                    if (config.bgMode === 'custom') optCustom?.classList.remove('hidden');
+                    else if (config.bgMode === 'gradient') optGradient?.classList.remove('hidden');
+                    else if (config.bgMode === 'solid') optSolid?.classList.remove('hidden');
+                }
+
+                if (bgModeSelect) {
+                    bgModeSelect.value = config.bgMode;
+                    updateBgSettingsUI();
+
+                    bgModeSelect.addEventListener('change', (e) => {
+                        config.bgMode = e.target.value;
+                        updateBgSettingsUI();
+                        saveConfig();
+                        applyBackground();
+                    });
+                }
+
+                const bgUrlInput = document.getElementById('setting-bg-url');
+                if (bgUrlInput) {
+                    bgUrlInput.value = config.bgUrl;
+                    bgUrlInput.addEventListener('change', (e) => {
+                        config.bgUrl = e.target.value;
+                        saveConfig();
+                        applyBackground();
+                    });
+                }
+
+                const bgGradSelect = document.getElementById('setting-bg-gradient');
+                if (bgGradSelect) {
+                    bgGradSelect.value = config.bgGradient;
+                    bgGradSelect.addEventListener('change', (e) => {
+                        config.bgGradient = e.target.value;
+                        saveConfig();
+                        applyBackground();
+                    });
+                }
+
+                const bgColorInput = document.getElementById('setting-bg-color');
+                if (bgColorInput) {
+                    bgColorInput.value = config.bgColor;
+                    bgColorInput.addEventListener('input', (e) => {
+                        config.bgColor = e.target.value;
+                        saveConfig();
+                        applyBackground();
+                    });
+                }
+
+                const blurInput = document.getElementById('setting-bg-blur');
+                const blurVal = document.getElementById('val-blur');
+                if (blurInput) {
+                    blurInput.value = config.bgBlur;
+                    if (blurVal) blurVal.textContent = `${config.bgBlur}px`;
+                    blurInput.addEventListener('input', (e) => {
+                        config.bgBlur = e.target.value;
+                        if (blurVal) blurVal.textContent = `${config.bgBlur}px`;
+                        saveConfig();
+                        applyBackground();
+                    });
+                }
+
+                const overlayInput = document.getElementById('setting-bg-overlay');
+                const overlayVal = document.getElementById('val-overlay');
+                if (overlayInput) {
+                    overlayInput.value = config.bgOverlay;
+                    if (overlayVal) overlayVal.textContent = `${config.bgOverlay}%`;
+                    overlayInput.addEventListener('input', (e) => {
+                        config.bgOverlay = e.target.value;
+                        if (overlayVal) overlayVal.textContent = `${config.bgOverlay}%`;
+                        saveConfig();
+                        applyBackground();
+                    });
+                }
+
+                const engineSelect = document.getElementById('setting-search-engine');
+                if (engineSelect) {
+                    engineSelect.value = config.searchEngine;
+                    engineSelect.addEventListener('change', (e) => {
+                        config.searchEngine = e.target.value;
+                        saveConfig();
+                    });
+                }
+
+                const clock24Input = document.getElementById('setting-clock-24h');
+                if (clock24Input) {
+                    clock24Input.checked = config.clock24h;
+                    clock24Input.addEventListener('change', (e) => {
+                        config.clock24h = e.target.checked;
+                        saveConfig();
+                        updateClock();
+                    });
+                }
+
+                const fontSelect = document.getElementById('setting-clock-font');
+                if (fontSelect) {
+                    fontSelect.value = config.clockFont;
+                    fontSelect.addEventListener('change', (e) => {
+                        config.clockFont = e.target.value;
+                        saveConfig();
+                        updateClock();
+                    });
+                }
+
+                const widgetToggles = {
+                    clock: document.getElementById('toggle-widget-clock'),
+                    quote: document.getElementById('toggle-widget-quote'),
+                    search: document.getElementById('toggle-widget-search'),
+                    links: document.getElementById('toggle-widget-links'),
+                    weather: document.getElementById('toggle-widget-weather')
+                };
+
+                for (let key in widgetToggles) {
+                    if (widgetToggles[key]) {
+                        widgetToggles[key].checked = config.visibleWidgets[key];
+                        widgetToggles[key].addEventListener('change', (e) => {
+                            config.visibleWidgets[key] = e.target.checked;
+                            saveConfig();
+                            applyWidgetVisibility();
+                        });
+                    }
+                }
+
+                document.getElementById('btn-export-settings')?.addEventListener('click', () => {
+                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(config, null, 2));
+                    const dlAnchor = document.createElement('a');
+                    dlAnchor.setAttribute("href", dataStr);
+                    dlAnchor.setAttribute("download", "homepage_config.json");
+                    document.body.appendChild(dlAnchor);
+                    dlAnchor.click();
+                    dlAnchor.remove();
+                });
+
+                document.getElementById('btn-import-settings')?.addEventListener('click', () => {
+                    document.getElementById('import-file-input')?.click();
+                });
+
+                document.getElementById('import-file-input')?.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const importedConfig = JSON.parse(event.target.result);
+                            config = { ...defaultConfig, ...importedConfig };
+                            saveConfig();
+                            location.reload();
+                        } catch (err) {
+                            alert("Invalid JSON configuration file.");
+                        }
+                    };
+                    reader.readAsText(file);
+                });
+            }
+
+            window.addEventListener('DOMContentLoaded', () => {
+                applyBackground();
+                applyWidgetVisibility();
+                setupIconPresetPicker();
+                renderQuickLinks();
+                renderTodos();
+                fetchWeather();
+                setRandomQuote();
+                initEventListeners();
+                refreshIcons();
+            });
+        })();
+    </script>
 </body>
 </html>
